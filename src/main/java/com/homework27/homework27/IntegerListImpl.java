@@ -5,16 +5,13 @@ import java.util.Arrays;
 public class IntegerListImpl implements IntegerList {
 
     private int size;
-    private final Integer[] integers;
-    private final Integer[] integersCopy;
+    private Integer[] integers;
 
     public IntegerListImpl(int arraySize) {
         integers = new Integer[arraySize];
-        integersCopy = Arrays.copyOf(integers, size);
     }
 
     public IntegerListImpl(Integer[] integersCopy) {
-        this.integersCopy = integersCopy;
         integers = new Integer[2];
     }
 
@@ -26,7 +23,7 @@ public class IntegerListImpl implements IntegerList {
 
     private void validateSize() {
         if (size == integers.length) {
-            throw new StringsIsFullException();
+            grow();
         }
     }
 
@@ -89,6 +86,7 @@ public class IntegerListImpl implements IntegerList {
     }
 
     public boolean contains(Integer item) {
+        Integer[] integersCopy = Arrays.copyOf(integers, size);
         sort(integersCopy);
         return binarySearch(integersCopy, item);
     }
@@ -158,18 +156,35 @@ public class IntegerListImpl implements IntegerList {
     }
 
     private static void sort(Integer[] integers) {
-        for (int i = 1; i < integers.length; i++) {
-            int temp = integers[i];
-            int j = i;
-            while (j > 0 && integers[j - 1] >= temp) {
-                integers[j] = integers[j - 1];
-                j--;
-            }
-            integers[j] = temp;
+        quickSort(integers, 0, integers.length-1);
+    }
+
+    public static void quickSort(Integer[] integers, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(integers, begin, end);
+
+            quickSort(integers, begin, partitionIndex - 1);
+            quickSort(integers, partitionIndex + 1, end);
         }
     }
 
-    private boolean binarySearch(Integer[] integers, Integer item){
+    private static int partition(Integer[] integers, int begin, int end) {
+        int pivot = integers[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (integers[j] <= pivot) {
+                i++;
+
+                swapElements(integers, i, j);
+            }
+        }
+
+        swapElements(integers, i + 1, end);
+        return i + 1;
+    }
+
+    private boolean binarySearch(Integer[] integers, Integer item) {
         int min = 0;
         int max = size - 1;
 
@@ -187,5 +202,9 @@ public class IntegerListImpl implements IntegerList {
             }
         }
         return false;
+    }
+
+    private void grow() {
+        integers = Arrays.copyOf(integers, size + size / 2);
     }
 }
