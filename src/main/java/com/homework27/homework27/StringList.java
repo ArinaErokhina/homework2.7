@@ -26,4 +26,5 @@ public interface StringList {
     void clear();
 
     String[] toArray();
+
 }

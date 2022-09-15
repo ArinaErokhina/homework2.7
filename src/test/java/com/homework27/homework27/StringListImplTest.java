@@ -98,7 +98,6 @@ public class StringListImplTest {
         String[] expected = {BDC, ABC};
         stringList.add(BDC);
         stringList.add(ABC);
-//        Assertions.assertEquals(Arrays.toString(expected), Arrays.toString(stringList.toArray()));
         Assertions.assertArrayEquals(expected, stringList.toArray());
     }
 }
