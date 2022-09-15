@@ -6,12 +6,15 @@ public class IntegerListImpl implements IntegerList {
 
     private int size;
     private final Integer[] integers;
+    private final Integer[] integersCopy;
 
     public IntegerListImpl(int arraySize) {
         integers = new Integer[arraySize];
+        integersCopy = Arrays.copyOf(integers, size);
     }
 
-    public IntegerListImpl() {
+    public IntegerListImpl(Integer[] integersCopy) {
+        this.integersCopy = integersCopy;
         integers = new Integer[2];
     }
 
@@ -86,7 +89,6 @@ public class IntegerListImpl implements IntegerList {
     }
 
     public boolean contains(Integer item) {
-        Integer[] integersCopy = toArray();
         sort(integersCopy);
         return binarySearch(integersCopy, item);
     }
